@@ -1,30 +1,36 @@
 /*
  * --------------------------------------------
- *
+ * 自动刷新客户端脚本
  * @version  1.0
  * @author   maotingfeng(hzmaotingfeng@corp.netease.com)
  * @date     2016-11-10 09:15:43
  * --------------------------------------------
  */
-function wbfresh_connect(){
+function wbfresh_connect( config ){
+
     var slice = Array.prototype.slice ,
         host = location.host ,
-        url = 'ws://' + host ,                                  // 形如:'ws://192.168.1.105/'
+        //url = 'ws://' + host ,                                  // 形如:'ws://192.168.1.105/'
+        url = config.wsURI ,
+        isLog = config.log ,
         connection = new WebSocket( url , 'echo-protocol' ) ;
-    connection.onopen = wsOpen ;
-    connection.onclose = wsClose ;
-    connection.onmessage = wsMessage ;
-    connection.onerror = wsError ;
+    log( 'wbfresh服务器地址：' , url ) ;
+
     function warn(){
         var args = slice.call( arguments ) ;
         args.unshift( 'wbfresh.js' ) ;
-        console.warn.apply( null , args ) ;
+        isLog ? console.warn.apply( null , args ) : '' ;
     }
     function log(){
         var args = slice.call( arguments ) ;
         args.unshift( 'wbfresh.js' ) ;
-        console.log.apply( null , args ) ;
+        isLog ? console.log.apply( null , args ) : '' ;
     }
+    connection.onopen = wsOpen ;
+    connection.onclose = wsClose ;
+    connection.onmessage = wsMessage ;
+    connection.onerror = wsError ;
+
     function wsOpen( event ){
         log( '连接到:' + event.currentTarget.url ) ;
         //connection.send( 'socket111.html' ) ;
@@ -44,4 +50,19 @@ function wbfresh_connect(){
         warn( event.data ) ;
     }
 }
-setTimeout( wbfresh_connect , 0 ) ;
+setTimeout( wbfresh_connect , 0 , (function(){
+    var thisScript = document.currentScript ? document.currentScript : document.getElementById( 'wbfresh' ) ;
+    if( thisScript ){
+
+    }else{
+        console.warn( '查找wbfresh的script节点失败' ) ;
+        return {} ;
+    }
+    var thisScriptAtts = thisScript.attributes ;
+        src = thisScript.src ,
+        baseURI = /http:\/\/.+\//g.exec( src )[0] ;
+    var query_index = src.indexOf( '?' ) ,
+        query =  query_index < 0 ? '' : src.substring( query_index ) ,
+        isLog = query.indexOf( 'log' ) < 0 ? true : false ;
+    return { wsURI: baseURI.replace( 'http' , 'ws' ) , log: isLog } ;
+})() ) ;
