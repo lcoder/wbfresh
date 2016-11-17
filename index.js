@@ -11,9 +11,11 @@ var server = require('http').createServer()
     } )
   , express = require('express')
   , app = express()
-  , port = 4080
   , log = function( txt ){ console.log( 'wbfresh' , txt ) ; }
-  , _project_path = require( './argvProcess' )() ;              // 监听项目路径的数组
+  , argvProcess = require( './argvProcess' )
+  , _project_path = argvProcess.paths              // 监听项目路径的数组
+  , port = argvProcess.port ;                      // 监听的端口
+
 
 if( _project_path.length <= 0 ){ return log( '请输出-p参数，指定需要监听的目录' ) ; }
 
@@ -89,7 +91,7 @@ wss.on( 'connection' , function connection( ws ){
 server.on( 'request', app ) ;
 
 server.listen( port , function () {
-    var tip = '监听已启动，请在需要刷新的html页面引入：\n<script src="${src}"></script>' ,
+    var tip = '监听已启动，请在需要刷新的html页面引入：\n<script src="${src}" id="__wbfresh__"></script>' ,
         src = 'http://localhost:' + server.address().port + '/wbfresh.js' ;
     log( tip.replace( '${src}' , src ) ) ;
 } ) ;

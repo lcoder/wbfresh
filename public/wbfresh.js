@@ -51,7 +51,7 @@ function wbfresh_connect( config ){
     }
 }
 setTimeout( wbfresh_connect , 0 , (function(){
-    var thisScript = document.currentScript ? document.currentScript : document.getElementById( 'wbfresh' ) ;
+    var thisScript = document.currentScript ? document.currentScript : document.getElementById( '__wbfresh__' ) ;
     if( thisScript ){
 
     }else{

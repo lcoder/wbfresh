@@ -1,7 +1,7 @@
 {
   "name": "wbfresh",
   "version": "1.0.1",
-  "description": "动态刷新小工具",
+  "description": "动态刷新工具",
   "main": "index.js",
   "dependencies": {
     "chokidar": "^1.6.1",
