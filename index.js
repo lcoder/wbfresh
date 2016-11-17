@@ -14,7 +14,8 @@ var server = require('http').createServer()
   , log = function( txt ){ console.log( 'wbfresh' , txt ) ; }
   , argvProcess = require( './argvProcess' )
   , _project_path = argvProcess.paths              // 监听项目路径的数组
-  , port = argvProcess.port ;                      // 监听的端口
+  , port = argvProcess.port                        // 监听的端口
+  , delay = argvProcess.delay ;                    // 延迟的毫秒数
 
 
 if( _project_path.length <= 0 ){ return log( '请输出-p参数，指定需要监听的目录' ) ; }
@@ -61,13 +62,22 @@ var _$$WS = (function(){
 
 chokidar.watch( _project_path , { ignored: /[\/\\]\./} ).on( 'change' , function( path ){
     _$$WS.forEach( function( ws , index ){
-        if( ws ){
-            ws.send( 'refresh' ) ;
+        if( delay ){
+            setTimeout( wsSend.bind( ws , 'refresh' ) , delay ) ;
         }else{
-            log( '_$$WS闭包有bug，传入的ws竟然为空了' ) ;
+            wsSend.bind( ws )( 'refresh' ) ;
         }
     } ) ;
 } ) ;
+
+function wsSend( txt ) {
+    var ws = this ;
+    if( ws ){
+        ws.send( txt ) ;
+    }else{
+        log( '_$$WS闭包有bug，传入的ws竟然为空了' ) ;
+    }
+}
 
 wss.on( 'connection' , function connection( ws ){
     var location = url.parse( ws.upgradeReq.url , true ) ;
