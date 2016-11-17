@@ -14,12 +14,14 @@ $ npm install wbfresh --save
 
 ```javascript
 $ cd node_modules/wbfresh
-$ node index -p {your_project_path} -o 4080
+$ node index -p {your_project_path} -o 4080 -d 0
 ```
 
 > -p your_project_path 为你需要监听的路径，多个路径，用逗号分隔。路径可以是文件，目录（目录是递归监听的，子目录也适用）或者glob模式
 
 > -o 指定监听服务器的端口，默认为4080
+
+> -d 指定延迟刷新的时间，默认为300毫秒，指定为0，不延迟刷新
 
 文本监听依赖[chokidar](https://github.com/paulmillr/chokidar)模块，所以路径规则，遵循此模块的路径监听规则就可以了。
 
