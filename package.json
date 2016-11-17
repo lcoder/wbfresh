@@ -1,6 +1,6 @@
 {
   "name": "wbfresh",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "动态刷新工具",
   "main": "index.js",
   "dependencies": {
