@@ -36,6 +36,9 @@ app.use( function (req, res) {
 var _$$WS = (function(){
     return {
             _arr: [] ,
+            size: function(){
+                return this._arr.length ;
+            } ,
             pushWS: function( ws ){
                 var _arr = this._arr ,
                     _flag = true ;
@@ -61,6 +64,7 @@ var _$$WS = (function(){
 
 
 chokidar.watch( _project_path , { ignored: /[\/\\]\./} ).on( 'change' , function( path ){
+    log( '当前共有' + _$$WS.size() + '个websocket连接' ) ;
     _$$WS.forEach( function( ws , index ){
         if( delay ){
             setTimeout( wsSend.bind( ws , 'refresh' ) , delay ) ;
@@ -72,14 +76,14 @@ chokidar.watch( _project_path , { ignored: /[\/\\]\./} ).on( 'change' , function
 
 function wsSend( txt ) {
     var ws = this ;
-    if( ws ){
+    if( ws.readyState == 1 ){
         ws.send( txt ) ;
     }else{
-        log( '_$$WS闭包有bug，传入的ws竟然为空了' ) ;
+        log( 'ws可能已经关闭，readyState=' + ws.readyState ) ;
     }
 }
 
-wss.on( 'connection' , function connection( ws ){
+wss.on( 'connection' , function connection( ws ){   // connection ws.readyState=1 ; close ws.readyState=3
     var location = url.parse( ws.upgradeReq.url , true ) ;
     // you might use location.query.access_token to authenticate or share sessions
     // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)

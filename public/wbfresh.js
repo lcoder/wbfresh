@@ -33,7 +33,9 @@ function wbfresh_connect( config ){
 
     function wsOpen( event ){
         log( '连接到:' + event.currentTarget.url ) ;
-        //connection.send( 'socket111.html' ) ;
+        // setTimeout( function(){
+        //     connection.send( '请给我用户登陆的信息' ) ;
+        // } , 3000 ) ;
     }
     function wsClose(){
         warn( '连接关闭' ) ;
