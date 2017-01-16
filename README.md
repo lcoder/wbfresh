@@ -33,3 +33,27 @@ wbfresh 监听已启动，请在需要刷新的html页面引入：
 ```
 
 在需要自动刷新的页面引入`wbfresh.js`javascript文件即可
+
+
+
+
+
+
+
+###### 常见问题
+
+- ```error
+  events.js:160
+        throw er; // Unhandled 'error' event
+        ^
+
+  Error: listen EADDRINUSE :::8080
+      at Object.exports._errnoException (util.js:1026:11)
+      at exports._exceptionWithHostPort (util.js:1049:20)
+      at Server._listen2 (net.js:1257:14)
+      at listen (net.js:1293:10)
+      at Server.listen (net.js:1389:5)
+  ```
+
+  8080端口被占用，换一个没有被占用的端口。
+

@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+var defaultPort = 4080 ,
+    defaultDelay = 100 ,
+    defaultPath = process.env.PWD ;
+
+defaultPath = './' ;
+
+var server = require('http').createServer()
+  , chokidar = require( 'chokidar' )
+  , fs = require( 'fs' )
+  , url = require('url')
+  , WebSocketServer = require('ws').Server
+  , wss = new WebSocketServer( {
+        server: server ,
+        verifyClient: function( info ){
+            return true ;
+        }
+    } )
+  , express = require('express')
+  , app = express()
+  // ...arguments
+  , log = function(){ var tmp = Array.prototype.slice.call( arguments ) ; tmp.unshift('wbfresh') ; console.log.apply( console , tmp ) ; }
+
+  , argv = require( 'yargs' ).option( 'p' , {
+        alias: 'path' ,
+        default: defaultPath ,
+        describe: "需要监听的目录"
+    } ).option( 'd' , {
+        alias: 'delay' ,
+        default: defaultDelay ,
+        describe: "延迟刷新的时间"
+    } ).option( 'o' , {
+        alias: 'port' ,
+        default: defaultPort ,
+        describe: "web服务器端口"
+    } )
+    .usage('使用: wbfresh [选项]')
+    .example( 'wbfresh -p ./myProject -d 100 -o 8080' , '监听myProject目录，端口8080，文件变动100毫秒后刷新' )
+    .help('h')
+    .alias('h', 'help')
+    .epilog('copyright 2017')
+    .argv
+  , argvPaths = String( argv.p === true ? defaultPath : argv.p )
+  , argvPort = isNaN( argv.o ) || argv.o < 0  ? defaultPort : argv.o
+  , argvDelay = isNaN( argv.d ) || argv.d < 0 ? defaultDelay : argv.d
+
+  , _project_path = argvPaths.split(',')           // 监听项目路径的数组
+  , port = argvPort                                // 监听的端口
+  , delay = argvDelay ;                            // 延迟的毫秒数
+
+app.set( 'view engine' , 'pug' ) ;
+app.set( 'views' , './views' ) ;
+
+app.use( express.static( './public' ) ) ;
+
+app.get( [ '/' , '/index' ] , function (req, res) {
+    res.render( 'index' ) ;
+} ) ;
+
+app.use( function (req, res) {
+    res.sendStatus( 404 ) ;
+} ) ;
+
+var _$$WS = (function(){
+    return {
+            _arr: [] ,
+            size: function(){
+                return this._arr.length ;
+            } ,
+            pushWS: function( ws ){
+                var _arr = this._arr ,
+                    _flag = true ;
+                _arr.forEach( function( item , index ){
+                    if( item === ws ){ _flag = false ; }
+                } ) ;
+                _flag ? _arr.push( ws ) : log( '已经存在此ws，添加失败' ) ;
+            } ,
+            removeWS: function( ws ){
+                var _arr = this._arr ,
+                    _flag = true ;
+                _arr.forEach( function( item , index ){
+                    if( item === ws ){
+                        _arr.splice( index , 1 ) ;
+                    }
+                } ) ;
+            } ,
+            forEach: function( cb ){
+                this._arr.forEach( cb || function(){ log( '请传入处理ws的函数' ) ; } ) ;
+            }
+        }
+})() ;
+
+
+chokidar.watch( _project_path , { ignored: /[\/\\]\./} ).on( 'change' , function( path ){
+    log( '当前共有' + _$$WS.size() + '个websocket连接' ) ;
+    _$$WS.forEach( function( ws , index ){
+        if( delay ){
+            setTimeout( wsSend.bind( ws , 'refresh' ) , delay ) ;
+        }else{
+            wsSend.bind( ws )( 'refresh' ) ;
+        }
+    } ) ;
+} ) ;
+
+function wsSend( txt ) {
+    var ws = this ;
+    if( ws.readyState == 1 ){
+        ws.send( txt ) ;
+    }else{
+        log( 'ws可能已经关闭，readyState=' + ws.readyState ) ;
+    }
+}
+
+wss.on( 'connection' , function connection( ws ){   // connection ws.readyState=1 ; close ws.readyState=3
+    var location = url.parse( ws.upgradeReq.url , true ) ;
+    // you might use location.query.access_token to authenticate or share sessions
+    // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+    log( '建立了ws连接' ) ;
+    ws.on( 'message' , function incoming(message){
+        log('接收到客户端的数据：%s', message);
+    } ) ;
+    ws.on( 'close' , function(){
+        log( '客户端关闭了连接' ) ;
+        _$$WS.removeWS( this ) ;
+    } ) ;
+    ws.on( 'error' , function(){
+        log( 'ws发生了错误' ) ;
+        _$$WS.removeWS( this ) ;
+    } ) ;
+    _$$WS.pushWS( ws ) ;
+} ) ;
+
+server.on( 'request', app ) ;
+server.listen( port , function () {
+    var tip = '监听已启动，请在需要刷新的html页面引入：\n<script src="${src}" id="__wbfresh__"></script>' ,
+        src = 'http://localhost:' + server.address().port + '/wbfresh.js' ;
+    log( '开始监听以下目录：' , _project_path.join() ) ;
+    log( '端口：' , port ) ;
+    log( '延迟：' , delay ) ;
+    log( tip.replace( '${src}' , src ) ) ;
+} ) ;
