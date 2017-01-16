@@ -21,7 +21,7 @@ $ node index -p {your_project_path} -o 4080 -d 0
 
 > -o 指定监听服务器的端口，默认为4080
 
-> -d 指定延迟刷新的时间，默认为300毫秒，指定为0，不延迟刷新
+> -d 指定延迟刷新的时间，默认为100毫秒，指定为0，不延迟刷新
 
 文本监听依赖[chokidar](https://github.com/paulmillr/chokidar)模块，所以路径规则，遵循此模块的路径监听规则就可以了。
 
@@ -36,7 +36,38 @@ wbfresh 监听已启动，请在需要刷新的html页面引入：
 
 
 
+OSX用户( 针对windows的bin命令还未调试，应该是不一样的，当然你可以自己尝试，你也可以用上面的方法启动，使用方式未变动 )
 
+1、全局安装
+
+```bin
+$ npm install wbfresh -g
+```
+
+2、进入项目目录，可执行全局命令`wbfresh`
+
+```bin
+➜  myProject git:(master) wbfresh
+```
+
+输出
+
+```bin
+➜  myProject git:(master) ✗ wbfresh
+wbfresh 开始监听以下目录： /Users/maotingfeng/demo/myProject
+wbfresh 端口： 4080
+wbfresh 延迟： 100
+wbfresh 监听已启动，请在需要刷新的html页面引入：
+<script src="http://localhost:4080/wbfresh.js" id="__wbfresh__"></script>
+```
+
+说明wbfresh启动成功
+
+3、配置参数(-p,-d,-o)参考上文。
+
+一些新的变动:
+
+​	-p 参数未指定，默认为当前执行环境的目录。
 
 
 
