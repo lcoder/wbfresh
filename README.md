@@ -1,6 +1,6 @@
 ## 修改js、css、html文件，不需要手动刷新浏览器，使用wbfresh自动刷新浏览器。
 
-<p style="text-algin:left;">![NPM](https://nodei.co/npm/wbfresh.png)</p>
+![NPM](https://nodei.co/npm/wbfresh.png)
 
 使用方法：
 
