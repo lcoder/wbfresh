@@ -4,7 +4,7 @@ var defaultPort = 4080 ,
     defaultPath = process.env.PWD ;
 
 defaultPath = './' ;
-
+var path = require( 'path' ) ;
 var server = require('http').createServer()
   , chokidar = require( 'chokidar' )
   , fs = require( 'fs' )
@@ -48,10 +48,11 @@ var server = require('http').createServer()
   , port = argvPort                                // 监听的端口
   , delay = argvDelay ;                            // 延迟的毫秒数
 
+var views = path.join( __dirname , '../views' ) ;
 app.set( 'view engine' , 'pug' ) ;
-app.set( 'views' , './views' ) ;
+app.set( 'views' , views ) ;
 
-app.use( express.static( './public' ) ) ;
+app.use( express.static( path.join( __dirname , '../public' ) ) ) ;
 
 app.get( [ '/' , '/index' ] , function (req, res) {
     res.render( 'index' ) ;
