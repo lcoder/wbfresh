@@ -57,3 +57,5 @@ wbfresh 监听已启动，请在需要刷新的html页面引入：
 
   8080端口被占用，换一个没有被占用的端口。
 
+- 可以到[github Issues](https://github.com/lcoder/wbfresh/issues)提问
+

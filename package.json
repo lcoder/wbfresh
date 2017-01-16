@@ -1,23 +1,27 @@
 {
-  "name": "wbfresh",
-  "version": "1.0.7",
-  "description": "动态刷新工具",
-  "main": "index.js",
-  "dependencies": {
-    "chokidar": "^1.6.1",
-    "express": "~4.14.0",
-    "pug": "^2.0.0-beta6",
-    "ws": "^1.1.1",
-    "yargs": "^6.6.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "bin": {
-    "wbfresh": "./bin/wbfresh"
-  } ,
-  "author": "maotingfeng <mtingfeng@gmail.com> (http://www.maotingfeng.me/)",
-  "license": "MIT"
+    "name": "wbfresh",
+    "version": "1.0.7",
+    "description": "动态刷新工具",
+    "main": "index.js",
+    "dependencies": {
+        "chokidar": "^1.6.1",
+        "express": "~4.14.0",
+        "pug": "^2.0.0-beta6",
+        "ws": "^1.1.1",
+        "yargs": "^6.6.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "bin": {
+        "wbfresh": "./bin/wbfresh"
+    },
+    "repository": {
+        "type": "git" ,
+        "url": "https://github.com/lcoder/wbfresh"
+    },
+    "author": "maotingfeng <mtingfeng@gmail.com> (http://www.maotingfeng.me/)",
+    "license": "MIT"
 }
