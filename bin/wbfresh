@@ -3,7 +3,6 @@ var defaultPort = 4080 ,
     defaultDelay = 100 ,
     defaultPath = process.env.PWD ;
 
-defaultPath = './' ;
 var path = require( 'path' ) ;
 var server = require('http').createServer()
   , chokidar = require( 'chokidar' )
