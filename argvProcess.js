@@ -2,7 +2,7 @@
  * --------------------------------------------
  *
  * @version  1.0
- * @author   maotingfeng(hzmaotingfeng@corp.netease.com)
+ * @author   maotingfeng(mtingfeng@gmail.com)
  * @date     2016-11-16 11:42:44
  * --------------------------------------------
  */

@@ -2,7 +2,7 @@
  * --------------------------------------------
  * 自动刷新客户端脚本
  * @version  1.0
- * @author   maotingfeng(hzmaotingfeng@corp.netease.com)
+ * @author   maotingfeng(mtingfeng@gmail.com)
  * @date     2016-11-10 09:15:43
  * --------------------------------------------
  */
